@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TileStache and Mapnik</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <style>
+            html, body {
+                height: 100%;
+            }
+            
+            #map {
+                height: 100%;
+                background: #000;
+            }        
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script type="text/javascript">
+            map = new L.map('map');
+            var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            var osmAttrib='some attribution';
+            
+            var osm = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 15, attribution: osmAttrib});
+            
+            map.setView(new L.LatLng(51.96, 7.46), 5);
+            map.addLayer(osm);
+            
+            var trackUrl='../baprojekt/baprojekt.py/mapnikpngwometatiles/{z}/{x}/{y}.png';
+            var trackAttrib='some attrib';
+            
+            var tracks = new L.TileLayer(trackUrl, {minZoom: 3, maxZoom: 15, attribution: trackAttrib, opacity: 0.8});
+            map.addLayer(tracks);
+        
+        </script>
+    
+    </body>
+
+    
+</html>

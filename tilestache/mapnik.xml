@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+    <Style name="very_slow">
+        <Rule>
+            <MarkersSymbolizer width="5" height="5" spacing="5" max_error="0.01" opacity="0.9" fill="green" stroke="green"/>
+        </Rule>
+    </Style>
+    <Style name="slow">
+        <Rule>
+            <MarkersSymbolizer width="5" height="5" spacing="5" max_error="0.01" opacity="0.9" fill="#00FF00" stroke="#00FF00"/>
+        </Rule>
+    </Style>
+    <Style name="slow_moderate">
+        <Rule>
+            <MarkersSymbolizer width="5" height="5" spacing="5" max_error="0.01" opacity="0.9" fill="#FFFF00" stroke="#FFFF00"/>
+        </Rule>
+    </Style>
+    <Style name="moderate">
+        <Rule>
+            <MarkersSymbolizer width="5" height="5" spacing="5" max_error="0.01" opacity="0.9" fill="orange" stroke="orange"/>
+        </Rule>
+    </Style>
+    <Style name="fast">
+        <Rule>
+            <MarkersSymbolizer width="5" height="5" spacing="5" max_error="0.01" opacity="0.9" fill="red" stroke="red"/>
+        </Rule>
+    </Style>
+    <Layer name="ectracks_vs">
+        <StyleName>very_slow</StyleName>
+        <Datasource>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="user">ectracks</Parameter>
+            <Parameter name="table">(select geom from speed where speed between 0 and 10) as geom</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508.34,-20037508.34,20037508.34,20037508.34</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="ectracks_s">
+        <StyleName>slow</StyleName>
+        <Datasource>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="user">ectracks</Parameter>
+            <Parameter name="table">(select geom from speed where speed between 10 and 30) as geom</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508.34,-20037508.34,20037508.34,20037508.34</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="ectracks_sm">
+        <StyleName>slow_moderate</StyleName>
+        <Datasource>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="user">ectracks</Parameter>
+            <Parameter name="table">(select geom from speed where speed between 30 and 50) as geom</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508.34,-20037508.34,20037508.34,20037508.34</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="ectracks_m">
+        <StyleName>moderate</StyleName>
+        <Datasource>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="user">ectracks</Parameter>
+            <Parameter name="table">(select geom from speed where speed between 50 and 80) as geom</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508.34,-20037508.34,20037508.34,20037508.34</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="ectracks_f">
+        <StyleName>fast</StyleName>
+        <Datasource>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="host">localhost</Parameter>
+            <Parameter name="dbname">ectracks</Parameter>
+            <Parameter name="port">5432</Parameter>
+            <Parameter name="user">ectracks</Parameter>
+            <Parameter name="table">(select geom from speed where speed > 80) as geom</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="estimate_extent">false</Parameter>
+            <Parameter name="extent">-20037508.34,-20037508.34,20037508.34,20037508.34</Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>
