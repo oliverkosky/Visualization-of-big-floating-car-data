@@ -1,0 +1,38 @@
+<html>
+    <head>
+         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <style>
+            html, body {
+                height: 100%;
+            }
+            #map { height: 100%; }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script type="text/javascript">
+            var map = L.map('map', {
+                center: [51.96, 7.46],
+                zoom: 12,
+                minZoom:6,
+                maxZoom:15
+            });
+            var basemap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'osm',
+                minZoom: 6,
+                maxZoom: 15
+            }).addTo(map);
+            
+            var mywms = L.tileLayer.wms("http://87.106.19.179:8080/geoserver/baprojekt/wms", {
+		   layers: 'baprojekt:speedview',
+		   format:'image/png',
+		   transparent: true,
+		   version: '1.1.0',
+		   attribution: 'none',
+                tiled:true
+		   }).addTo(map);
+                
+        </script>
+    </body>
+</html>

@@ -1,7 +1,64 @@
+<!DOCTYPE html>
 <html>
-<body>
-<h1>Please choose a type of visualization</h1>    
-<a href="cartodb/cartodb.html">CartoDB</a>
-</body>
+<head>
+	<title>Using TileStache</title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="lib/TileLayer.GeoJSON.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            height: 100%;
+        }
 
+        #map {
+            height: 100%;
+        background: #000;
+        }
+    </style>
+</head>
+<body>
+	<div id="map"></div>
+
+	<script>
+
+		// set up the map
+	map = new L.Map('map');
+
+	// create the tile layer with correct attribution
+	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 15, attribution: osmAttrib});		
+
+	// start the map in South-East England
+	map.setView(new L.LatLng(52,7),3);
+	map.addLayer(osm);
+  
+   var style = {
+        "clickable": true,
+        "color": "#00D",
+        "fillColor": "#00D",
+        "weight": 1.0,
+        "opacity": 0.3,
+        "fillOpacity": 0.2,
+       "overlap":false
+    };
+   // var geojsonURL = '../baprojekt/baprojekt.py/ecgeojson/9/265/166.json';
+        
+   var geojsonTileLayer = new L.TileLayer.GeoJSON('../baprojekt/baprojekt.py/ecgeojson/{z}/{x}/{y}.json', {
+            clipTiles: true,
+            unloadInvisibleTiles: true,
+            unique: function (feature) { 
+                return feature.id;
+            }
+        }, {
+            style: style
+        }
+    );
+        
+        map.addLayer(geojsonTileLayer);
+	</script>
+</body>
 </html>
