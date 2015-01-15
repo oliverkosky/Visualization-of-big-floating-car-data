@@ -15,20 +15,27 @@
          <script type="text/javascript">
            				
 			function initialize(){
+                
+                //set up URL to WMS endpoint
 				var wmsUrl='http://87.106.19.179:8080/geoserver/baprojekt/wms';
-				var view = new ol.View({
+				//Create OpenLayers view which will be taken as argument by the map later
+                var view = new ol.View({
 						center: ol.proj.transform([7,52], 'EPSG:4326', 'EPSG:3857'),
 					zoom:9,
 					minZoom: 3,
 					maxZoom: 16
 					});
-				var wmsSource = new ol.source.TileWMS({
+	
+                //set up WMS source in order to serve it as WMS layer
+                var wmsSource = new ol.source.TileWMS({
 						url: wmsUrl,
 						serverType:'geoserver',
 						params:{
 							'LAYERS':"baprojekt:ectrackgroup", 'TILED': true, 'TRANSPARENT': true
 						}
 					})
+                
+                //create base map with base layer from MapQuest. Takes view as argument
 				var map = new ol.Map({
 					target:'map',
 					layers:[
@@ -38,17 +45,23 @@
 					],
 					view: view
 				});
-				
+		
+                //Initialize WMS layer and add it to map
 				var wms = new ol.layer.Tile({
 					source: wmsSource
 				});
 				map.addLayer(wms);
+                
+                //Creates OnClick event listener in order to create GetFeatureInfo requests through click on map
 				map.on('singleclick', function(e){
 				//coords in [lng,lat] format
 					var coord = e.coordinate;
-					var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+					//Coordinates need to be transformed from spherical mercator to WGS 84
+                    var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
 					console.log(transformed_coordinate);
-					var params={
+	
+                    //Create GetFeatureInfo request parameters
+                    var params={
 						info_format:'application/json',
 						query_layers:'baprojekt:ectrackgroup',
 						layers:'baprojekt:ectrackgroup'
@@ -56,6 +69,7 @@
 					var resolution = view.getResolution();
 					var request=wmsSource.getGetFeatureInfoUrl(coord,resolution,'EPSG:900913',params);
 					
+                    //Do the actual GetFeatureInfo request. CORS needs to be active on server!
 					$.ajax({
 						url: request,
 						success: function(response){

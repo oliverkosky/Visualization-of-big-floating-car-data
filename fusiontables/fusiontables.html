@@ -10,11 +10,14 @@
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqX7NFuoh-TmXX1QRolM9-mBK_W0YvPo0&sensor=TRUE"></script>
         <script type="text/javascript">
             function initialize(){
+                //define map options for Google Maps
                 var mapOptions={
                     center: new google.maps.LatLng(51.96,7.51), zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
+                //initialize basemap
                 var map = new google.maps.Map(document.getElementById("map"),mapOptions);
                 
+                //Add the Google FusionTables layer
                 var layer = new google.maps.FusionTablesLayer({
                     query: {
                         select: '*',
