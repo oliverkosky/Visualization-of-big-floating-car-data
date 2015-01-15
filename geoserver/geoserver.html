@@ -1,38 +1,93 @@
 <html>
     <head>
          <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+		 <link rel="stylesheet" href="http://openlayers.org/en/v3.1.1/css/ol.css" type="text/css">
          <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+		 <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		 <script src="http://openlayers.org/en/v3.1.1/build/ol.js" type="text/javascript"></script>
+		 <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
         <style>
             html, body {
                 height: 100%;
             }
             #map { height: 100%; }
         </style>
-    </head>
-    <body>
-        <div id="map"></div>
-        <script type="text/javascript">
-            var map = L.map('map', {
-                center: [51.96, 7.46],
-                zoom: 12,
-                minZoom:6,
-                maxZoom:15
-            });
-            var basemap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'osm',
-                minZoom: 6,
-                maxZoom: 15
-            }).addTo(map);
-            
-            var mywms = L.tileLayer.wms("http://87.106.19.179:8080/geoserver/baprojekt/wms", {
-		   layers: 'baprojekt:speedview',
-		   format:'image/png',
-		   transparent: true,
-		   version: '1.1.0',
-		   attribution: 'none',
-                tiled:true
-		   }).addTo(map);
-                
+         <script type="text/javascript">
+           				
+			function initialize(){
+				var wmsUrl='http://87.106.19.179:8080/geoserver/baprojekt/wms';
+				var view = new ol.View({
+						center: ol.proj.transform([7,52], 'EPSG:4326', 'EPSG:3857'),
+					zoom:9,
+					minZoom: 3,
+					maxZoom: 16
+					});
+				var wmsSource = new ol.source.TileWMS({
+						url: wmsUrl,
+						serverType:'geoserver',
+						params:{
+							'LAYERS':"baprojekt:ectrackgroup", 'TILED': true, 'TRANSPARENT': true
+						}
+					})
+				var map = new ol.Map({
+					target:'map',
+					layers:[
+						new ol.layer.Tile({
+							source: new ol.source.MapQuest({layer:'osm'})
+						})
+					],
+					view: view
+				});
+				
+				var wms = new ol.layer.Tile({
+					source: wmsSource
+				});
+				map.addLayer(wms);
+				map.on('singleclick', function(e){
+				//coords in [lng,lat] format
+					var coord = e.coordinate;
+					var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+					console.log(transformed_coordinate);
+					var params={
+						info_format:'application/json',
+						query_layers:'baprojekt:ectrackgroup',
+						layers:'baprojekt:ectrackgroup'
+					};
+					var resolution = view.getResolution();
+					var request=wmsSource.getGetFeatureInfoUrl(coord,resolution,'EPSG:900913',params);
+					
+					$.ajax({
+						url: request,
+						success: function(response){
+							
+							if(response.features[0] == undefined) {
+								alert("no feature selected");
+								return;
+							}
+							feature = response.features[0];
+							props = feature.properties;
+							geom = feature.geometry;
+							speed = props.speed;
+							coordinates = geom.coordinates;
+							trans_coord = ol.proj.transform(coordinates, "EPSG:900913", "EPSG:4326");
+							latG = coordinates[1];
+							lngG = coordinates[0];
+							latM = trans_coord[1];
+							lngM = trans_coord[0];
+							alert("Coordinates (Google): "+lngG+", "+latG+"\n"+
+							"Coordinates (Mercator): "+lngM + ", "+latM +
+							"\nSpeed: " + speed + " km/h");
+						}
+					});
+				});
+			}
+				
         </script>
+    </head>
+    <body onload="initialize()">
+        <div id="map">
+			<div id="gmap"></div>
+			<div id="olmap"></div>
+		</div>
     </body>
 </html>

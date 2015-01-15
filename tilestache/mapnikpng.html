@@ -16,10 +16,8 @@
                 background: #000;
             }        
         </style>
-    </head>
-    <body>
-        <div id="map"></div>
         <script type="text/javascript">
+           function initialize(){
             map = new L.map('map');
             var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
             var osmAttrib='some attribution';
@@ -34,8 +32,12 @@
             
             var tracks = new L.TileLayer(trackUrl, {minZoom: 3, maxZoom: 15, attribution: trackAttrib, opacity: 0.8});
             map.addLayer(tracks);
-        
+           }
         </script>
+    </head>
+    <body onload="initialize()">
+        <div id="map"></div>
+        
     
     </body>
 

@@ -1,0 +1,31 @@
+<html>
+    <body>
+        <h1>Downloader</h1>
+        <button id="anfrage" onclick="getMeasurement()">Anfrage senden</button>
+        <button id="download">EXPORT!</button>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript">
+            var text='lat, lng, speed\n';
+            var measurement;
+            function getMeasurement() {
+			
+				for(var i = 0; i< 500000; i++){
+				var lat=Math.floor((Math.random()*80)+1);
+				var lng = Math.floor((Math.random()*179)+1);
+				var speed = Math.floor((Math.random()*160)+1);
+				text=text+lat+", "+lng+", "+speed+"\n"
+				console.log("Durchgang: "+i);
+             }
+			 exportToCsv();
+            }
+                                
+             
+            function exportToCsv(){
+                window.open('data:text/csv;charset=utf-8,'+escape(text));
+            }
+            var button = document.getElementById('download');
+            button.addEventListener('click',exportToCsv);
+        </script>
+        
+    </body>
+</html>
